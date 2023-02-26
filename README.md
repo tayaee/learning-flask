@@ -15,7 +15,7 @@ or
     python app.py
 # Test the service
     curl http://localhost:5000/hello
-# Initializa database
+# Initialize database
     init-db.bat
 or
 
