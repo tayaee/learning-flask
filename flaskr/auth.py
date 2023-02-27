@@ -55,7 +55,8 @@ def login():
             db = get_db()
             sql = 'select * from user where username = ?'
             args = (username,)
-            user = db.execute(sql, args).fetchone()
+            row = db.execute(sql, args).fetchone()
+            user = {k: row[k] for k in row.keys()}
             if user is None:
                 error = 'Incorrect username.'
             elif not check_password_hash(user['password'], password):
@@ -79,7 +80,8 @@ def load_logged_in_user():
     else:
         sql = 'select * from user where id = ?'
         args = (user_id,)
-        g.user = get_db().execute(sql, args).fetchone()
+        row = get_db().execute(sql, args).fetchone()
+        g.user = {k: row[k] for k in row.keys()}
 
 
 @bp.route('/logout')
