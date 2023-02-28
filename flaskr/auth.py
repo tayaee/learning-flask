@@ -24,7 +24,7 @@ def register():
         error = None
         if not username:
             error = 'Username is required.'
-        if not password:
+        elif not password:
             error = 'Password is required.'
         if error is None:
             db = get_db()
@@ -33,11 +33,11 @@ def register():
                 args = (username, generate_password_hash(password))
                 db.execute(sql, args)
                 db.commit()
+                return redirect(url_for('auth.login'))
             except db.IntegrityError:
                 error = f'User {username} is already registered.'
-            else:
-                return redirect(url_for('auth.login'))
-        flash(error)
+        if error is not None:
+            flash(error)
     return render_template('auth/register.html')
 
 
@@ -49,23 +49,24 @@ def login():
         error = None
         if not username:
             error = 'Username is required.'
-        if not password:
+        elif not password:
             error = 'Password is required.'
         if error is None:
             db = get_db()
             sql = 'select * from user where username = ?'
             args = (username,)
             row = db.execute(sql, args).fetchone()
-            user = {k: row[k] for k in row.keys()}
-            if user is None:
+            if row:
+                user = {k: row[k] for k in row.keys()}
+                if check_password_hash(user['password'], password):
+                    session.clear()
+                    session['user_id'] = user['id']
+                    return redirect(url_for('index'))
+                else:
+                    error = 'Incorrect password.'
+            else:
                 error = 'Incorrect username.'
-            elif not check_password_hash(user['password'], password):
-                error = 'Incorrect password.'
-
-            if error is None:
-                session.clear()
-                session['user_id'] = user['id']
-                return redirect(url_for('index'))
+        if error:
             flash(error)
 
     return render_template('auth/login.html')
