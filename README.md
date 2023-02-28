@@ -22,3 +22,10 @@ or
     flask --app flaskr init-db
     dir instance\flaskr.sqlite
  
+# Unit tests
+    pytest
+
+# Coverage
+    coverage run -m pytest
+    coverage report
+    coverage html

@@ -66,7 +66,7 @@ def login():
                     error = 'Incorrect password.'
             else:
                 error = 'Incorrect username.'
-        if error:
+        if error is not None:
             flash(error)
 
     return render_template('auth/login.html')
