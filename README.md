@@ -26,6 +26,7 @@ or
     pytest
 
 # Coverage
-    coverage run -m pytest
-    coverage report
-    coverage html
+    coverage run -m pytest & coverage report
+or
+
+    coverage run -m pytest & coverage html
