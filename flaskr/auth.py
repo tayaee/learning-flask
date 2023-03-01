@@ -36,8 +36,7 @@ def register():
                 return redirect(url_for('auth.login'))
             except db.IntegrityError:
                 error = f'User {username} is already registered.'
-        if error is not None:
-            flash(error)
+        flash(error)
     return render_template('auth/register.html')
 
 
@@ -66,9 +65,7 @@ def login():
                     error = 'Incorrect password.'
             else:
                 error = 'Incorrect username.'
-        if error is not None:
-            flash(error)
-
+        flash(error)
     return render_template('auth/login.html')
 
 

@@ -24,15 +24,15 @@ select p.id, title, body, created, author_id, username
 '''
     args = (id,)
     row = get_db().execute(sql, args).fetchone()
-    post = {k: row[k] for k in row.keys()}
-
-    if post is None:
+    if row:
+        post = {k: row[k] for k in row.keys()}
+        if check_author:
+            post_author_id = post['author_id']
+            g_user_id = g.user['id']
+            if post_author_id != g_user_id:
+                abort(403)
+    else:
         abort(404, f'Post id {id} does not exist.')
-    if check_author:
-        post_author_id = post['author_id']
-        g_user_id = g.user['id']
-        if post_author_id != g_user_id:
-            abort(403)
     return post
 
 

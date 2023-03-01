@@ -1,12 +1,15 @@
 import pytest
+from flask import Flask
 from flask import g
 from flask import session
+from flask.testing import FlaskClient
 
 from flaskr.db import get_db
+from tests.conftest import AuthActions
 
 
 # Test /auth/register
-def test_register(client, app):
+def test_register(client: FlaskClient, app: Flask):
     res = client.get('/auth/register')
     assert res.status_code == 200
 
@@ -32,14 +35,14 @@ def test_register(client, app):
                                  ('test', 'test', b'already registered'),
                          )
                          )
-def test_register_validate_input(client, username, password, message):
+def test_register_validate_input(client: FlaskClient, username: str, password: str, message: str):
     data = {'username': username, 'password': password}
     res = client.post('/auth/register', data=data)
     assert message in res.data
 
 
 # Test /auth/login
-def test_login(client, auth):
+def test_login(client: FlaskClient, auth: AuthActions):
     res = client.get('/auth/login')
     assert res.status_code == 200
 
@@ -64,13 +67,13 @@ def test_login(client, auth):
                                  ('test', 'wrong', b'Incorrect password.'),
                          )
                          )
-def test_login_validate_input(auth, username, password, expected_message):
+def test_login_validate_input(auth: AuthActions, username: str, password: str, expected_message: str):
     res = auth.login(username, password)
     print(res.data)
     assert expected_message in res.data
 
 
-def test_logout(client, auth):
+def test_logout(client: FlaskClient, auth: AuthActions):
     # session_user_id = session.get('user_id')
     # assert 'user_id' not in session
 

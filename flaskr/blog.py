@@ -36,8 +36,7 @@ def create():
             svc_create_post(body, title)
             return redirect(url_for('blog.index'))
 
-        if error is not None:
-            flash(error)
+        flash(error)
     return render_template('blog/create.html')
 
 
@@ -57,8 +56,7 @@ def update(id):
             svc_update_post(body, id, title)
             return redirect(url_for('blog.index'))
 
-        if error is not None:
-            flash(error)
+        flash(error)
     return render_template('blog/update.html', post=post)
 
 
@@ -66,7 +64,7 @@ def update(id):
 @login_required
 def delete(id):
     post = svc_get_post(id)
-    if post is not None:
+    if post:
         db = get_db()
         sql = 'delete from post where id = ?'
         args = (id,)

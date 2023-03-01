@@ -2,6 +2,9 @@ import os
 import tempfile
 
 import pytest
+from flask import Flask
+from flask.testing import FlaskCliRunner
+from flask.testing import FlaskClient
 
 from flaskr import create_app
 from flaskr.db import get_db
@@ -13,7 +16,7 @@ with open(data_sql_file, 'rb') as f:
 
 
 @pytest.fixture
-def app():
+def app() -> Flask:
     db_fd, db_path = tempfile.mkstemp()
     app = create_app({'TESTING': True, 'DATABASE': db_path})
     with app.app_context():
@@ -26,18 +29,18 @@ def app():
 
 
 @pytest.fixture
-def client(app):
+def client(app: Flask) -> FlaskClient:
     return app.test_client()  # TODO Learn more
 
 
 @pytest.fixture
-def runner(app):
+def runner(app: Flask) -> FlaskCliRunner:
     return app.test_cli_runner()  # TODO Learn more
 
 
 # Test auth
 class AuthActions(object):
-    def __init__(self, client):
+    def __init__(self, client: FlaskClient):
         self._client = client
 
     def login(self, username='test', password='test'):
@@ -49,5 +52,5 @@ class AuthActions(object):
 
 
 @pytest.fixture
-def auth(client):
+def auth(client: FlaskClient) -> AuthActions:
     return AuthActions(client)
