@@ -10,4 +10,7 @@ setup(
     install_requires=[
         'flask',
     ],
+    scripts=[
+        'gen-secret-key.bat',
+    ]
 )
